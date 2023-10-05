@@ -9,7 +9,6 @@ CURR_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(CURR_DIR, "..", "data")
 
 fpaths = [os.path.abspath(fpath) for fpath in glob.glob(os.path.join(DATA_DIR, "nio", "*.wav"))]
-
 words_to_template_mfcc_feats = {
   fpath.split('/')[-1].split('.')[0].lower(): extract_mfcc_feats(fpath) for fpath in fpaths
 }
