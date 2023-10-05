@@ -5,7 +5,7 @@ import scipy.io.wavfile as wav
 WINLEN = 0.02
 NFFT = 1024
 
-def mfcc_feats(fpath: str) :
+def extract_mfcc_feats(fpath:str) :
   (rate,sig) = wav.read(fpath)
 
   mfcc_feats = mfcc(sig, rate, winlen=WINLEN, nfft=NFFT)
