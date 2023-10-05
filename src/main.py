@@ -22,7 +22,11 @@ input_fpaths_to_label_and_mfcc_feats = {
 labels, predictions = [], []
 for input_fpath in input_fpaths_to_label_and_mfcc_feats :
   label = input_fpaths_to_label_and_mfcc_feats[input_fpath][0]
-  predicted_word, cost, path = infer(words_to_template_mfcc_feats, input_fpath)
+  predicted_word, cost, path = infer(
+    words_to_template_mfcc_feats,
+    input_fpath,
+    mode="euclidean"
+  )
   print(f"Label: {label}")
   print(f"Predicted word: {predicted_word}")
   print(f"\tCost: {cost}")
