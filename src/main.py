@@ -28,8 +28,8 @@ for i, input_fpath in enumerate(input_fpaths_to_label_and_mfcc_feats) :
     input_fpath,
     mode="euclidean"
   )
-  print(f"Label: {label}")
-  print(f"Predicted word: {predicted_word}")
+  print(f"\tLabel: {label}")
+  print(f"\tPredicted word: {predicted_word}")
   print(f"\tCost: {cost}")
   labels.append(label)
   predictions.append(predicted_word)
