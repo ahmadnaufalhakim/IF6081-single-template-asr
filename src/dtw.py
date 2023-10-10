@@ -55,9 +55,6 @@ def dtw(x:np.array, y:np.array, dist=None) :
   # Get lengths of input and template sequences
   len_x, len_y = len(x), len(y)
 
-  # Initialize search space as indices of x and y (1-indexed)
-  search_space = [(i+1, j+1) for i in range(len_x) for j in range(len_y)]
-
   # Initialize a dictionary to store best path costs (P[i,j])
   # i-th input frame aligns with j-th template frame
   P = defaultdict(lambda: (float("inf"),))
@@ -65,34 +62,60 @@ def dtw(x:np.array, y:np.array, dist=None) :
   # Initialize the origin's path cost to 0
   P[0,0] = (0,0,0) # Note: P[i,j][0] is best cost, (P[i,j][1],P[i,j][2]) is the best path
 
-  # Populate the P dictionary with all the best cost and paths for each node
-  for i,j in search_space :
-    cost = dist(x[i-1], y[j-1])
-    # Determine which previous alignment node to choose
-    if i == 1 :
-      P[i,j] = min(
-        (P[i-1,j-1][0] + cost, i-1, j-1),
-        (P[i-1,j-2][0] + cost, i-1, j-2),
-        (P[i-1,j-3][0] + cost, i-1, j-3),
-        key= lambda tup: tup[0]
-      )
-    else :
-      P[i,j] = min(
-        (P[i-1,j][0] + cost, i-1, j),
-        (P[i-1,j-1][0] + cost, i-1, j-1),
-        (P[i-1,j-2][0] + cost, i-1, j-2),
-        key= lambda tup: tup[0]
-      )
+  # Populate the P dictionary with all the best cost and paths for each (i,j) node in the
+  # search space with size len_x*len_y while keeping track of the best last template index
+  # for last input index
+  best_last_j, best_cost = None, float("inf")
+  for i in range(1, len_x+1) :
+    for j in range(1, len_y+1) :
+      cost = dist(x[i-1], y[j-1])
+      # Determine which previous alignment node to choose
+      if i == 1 :
+        P[i,j] = min(
+          (P[i-1,j-1][0] + cost, i-1, j-1),
+          (P[i-1,j-2][0] + cost, i-1, j-2),
+          (P[i-1,j-3][0] + cost, i-1, j-3),
+          key= lambda tup: tup[0]
+        )
+      else :
+        P[i,j] = min(
+          (P[i-1,j][0] + cost, i-1, j),
+          (P[i-1,j-1][0] + cost, i-1, j-1),
+          (P[i-1,j-2][0] + cost, i-1, j-2),
+          key= lambda tup: tup[0]
+        )
+        if i == len_x and P[i,j][0] < best_cost :
+          best_last_j = j
+          best_cost = P[i,j][0]
 
   # Reconstruct the best path
-  result_path = []
-  i, j = len_x, len_y
+  best_path = []
+  i, j = len_x, best_last_j
   while not (i == j == 0) :
-    result_path.append((i-1, j-1))
+    best_path.append((i-1, j-1))
     i, j = P[i,j][1], P[i,j][2]
-  result_path.reverse()
+  best_path.reverse()
+  return best_cost, best_path
 
-  return P[len_x,len_y][0], result_path
-  
 if __name__ == "__main__" :
+  # import glob
+  # import os
+
+  # from feature_extractor import extract_mfcc_feats
+  # from inference import infer
+
+  # CURR_DIR = os.path.dirname(os.path.abspath(__file__))
+  # DATA_DIR = os.path.join(CURR_DIR, "..", "data")
+  # TEMPLATE_NAME = "nio"
+  # fpaths = [os.path.abspath(fpath) for fpath in glob.glob(os.path.join(DATA_DIR, TEMPLATE_NAME, "*.wav"))]
+  # words_to_template_mfcc_feats = {
+  #   fpath.split('/')[-1].split('.')[0].lower(): extract_mfcc_feats(fpath) for fpath in fpaths
+  # }
+
+  # input_fpath = "/mnt/d/Hakims/college/S2/IF6081_Pemrosesan-Suara-Lanjut/IF6081-single-template-asr/data/yanuar/Raja.wav"
+
+  # mfcc_feats = extract_mfcc_feats(input_fpath)
+  # print(words_to_template_mfcc_feats["raja"].shape)
+  # print(mfcc_feats.shape)
+  # print(infer(words_to_template_mfcc_feats, input_fpath))
   pass
