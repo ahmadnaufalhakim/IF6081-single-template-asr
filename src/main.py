@@ -7,19 +7,21 @@ from inference import infer
 
 CURR_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(CURR_DIR, "..", "data")
+TEMPLATE_NAME = "nio"
 
-fpaths = [os.path.abspath(fpath) for fpath in glob.glob(os.path.join(DATA_DIR, "nio", "*.wav"))]
+fpaths = [os.path.abspath(fpath) for fpath in glob.glob(os.path.join(DATA_DIR, TEMPLATE_NAME, "*.wav"))]
 words_to_template_mfcc_feats = {
   fpath.split('/')[-1].split('.')[0].lower(): extract_mfcc_feats(fpath) for fpath in fpaths
 }
 
-input_fpaths = [os.path.abspath(fpath) for fpath in glob.glob(os.path.join(DATA_DIR, "hakim", "*.wav"))]
+input_fpaths = [os.path.abspath(fpath) for fpath in glob.glob(os.path.join(DATA_DIR, "**", "*.wav")) if not fpath.startswith(os.path.join(DATA_DIR, TEMPLATE_NAME))]
 input_fpaths_to_label_and_mfcc_feats = {
   input_fpath: (input_fpath.split('/')[-1].split('.')[0].lower(), extract_mfcc_feats(input_fpath)) for input_fpath in input_fpaths
 }
 
 labels, predictions = [], []
-for input_fpath in input_fpaths_to_label_and_mfcc_feats :
+for i, input_fpath in enumerate(input_fpaths_to_label_and_mfcc_feats) :
+  print(i+1, input_fpath)
   label = input_fpaths_to_label_and_mfcc_feats[input_fpath][0]
   predicted_word, cost, path = infer(
     words_to_template_mfcc_feats,
