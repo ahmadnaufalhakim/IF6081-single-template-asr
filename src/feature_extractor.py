@@ -2,8 +2,8 @@ import numpy as np
 from python_speech_features import mfcc, delta
 import scipy.io.wavfile as wav
 
-WINLEN = 0.02
-NFFT = 1024
+WINLEN = 0.16
+NFFT = 65536
 
 def extract_mfcc_feats(fpath:str) :
   (rate,sig) = wav.read(fpath)
