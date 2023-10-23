@@ -7,7 +7,7 @@ from inference import infer
 
 CURR_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(CURR_DIR, "..", "data")
-TEMPLATE_NAME = "nio"
+TEMPLATE_NAME = "sp-1"
 
 fpaths = [os.path.abspath(fpath) for fpath in glob.glob(os.path.join(DATA_DIR, TEMPLATE_NAME, "*.wav"))]
 words_to_template_mfcc_feats = {
