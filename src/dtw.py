@@ -98,24 +98,4 @@ def dtw(x:np.array, y:np.array, dist=None) :
   return best_cost, best_path
 
 if __name__ == "__main__" :
-  # import glob
-  # import os
-
-  # from feature_extractor import extract_mfcc_feats
-  # from inference import infer
-
-  # CURR_DIR = os.path.dirname(os.path.abspath(__file__))
-  # DATA_DIR = os.path.join(CURR_DIR, "..", "data")
-  # TEMPLATE_NAME = "nio"
-  # fpaths = [os.path.abspath(fpath) for fpath in glob.glob(os.path.join(DATA_DIR, TEMPLATE_NAME, "*.wav"))]
-  # words_to_template_mfcc_feats = {
-  #   fpath.split('/')[-1].split('.')[0].lower(): extract_mfcc_feats(fpath) for fpath in fpaths
-  # }
-
-  # input_fpath = "/mnt/d/Hakims/college/S2/IF6081_Pemrosesan-Suara-Lanjut/IF6081-single-template-asr/data/yanuar/Raja.wav"
-
-  # mfcc_feats = extract_mfcc_feats(input_fpath)
-  # print(words_to_template_mfcc_feats["raja"].shape)
-  # print(mfcc_feats.shape)
-  # print(infer(words_to_template_mfcc_feats, input_fpath))
   pass
